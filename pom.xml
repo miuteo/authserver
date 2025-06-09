@@ -56,6 +56,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
@@ -112,6 +116,23 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>timestamp-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>build.tag.timestamp</name>
+                            <pattern>yyyyMMdd-HHmmss</pattern>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
@@ -121,7 +142,27 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <image>
+                        <name>authserver:${build.tag.timestamp}</name>
+                        <env>
+                            <BP_HEALTH_CHECKER_ENABLED>true</BP_HEALTH_CHECKER_ENABLED>
+                            <BP_JVM_VERSION>21.*</BP_JVM_VERSION> <!-- Equivalent to environment in Gradle -->
+                            <DB_HOSTNAME>polar-postgres</DB_HOSTNAME>
+                        </env>
+                        <buildpacks>
+                            <buildpack>urn:cnb:builder:paketo-buildpacks/java</buildpack>
+                            <buildpack>docker.io/paketobuildpacks/health-checker:latest</buildpack>
+                        </buildpacks>
+                    </image>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-image</goal> <!-- This goal repackages the JAR into an executable one -->
+                        </goals>
+                        <phase>package</phase> <!-- This binds the plugin execution to the 'package' phase -->
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
