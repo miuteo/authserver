@@ -4,7 +4,6 @@ on: push
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: authserver
-  VERSION: latest
 
 jobs:
   build:
@@ -55,16 +54,20 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: maven
+      - name: Set version date
+        id: set-version
+        run: echo "timestamp=$(date +%Y-%m-%d-%H%M%S)" >> "$GITHUB_OUTPUT"
       - name: Log in into container registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build container image
+      - name: Build container image with timestamp
         run: |
-          mvn package -DskipTests
+          mvn package -DskipTests -Dbuild.timestamp=${{steps.set-version.outputs.timestamp}}
       - name: Publish container image
         run: |
-          docker tag ${{ env.IMAGE_NAME }}:${{ env.VERSION }}  ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-          docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.set-version.outputs.timestamp }}  ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ steps.set-version.outputs.timestamp }}

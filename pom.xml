@@ -127,7 +127,7 @@
                         </goals>
                         <configuration>
                             <name>build.tag.timestamp</name>
-                            <pattern>yyyyMMdd-HHmmss</pattern>
+                            <pattern>yyyy-MM-dd-HHmmss</pattern>
                         </configuration>
                     </execution>
                 </executions>
