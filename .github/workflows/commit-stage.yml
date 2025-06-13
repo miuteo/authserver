@@ -65,7 +65,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build container image with timestamp
         run: |
-          mvn package -DskipTests -Dbuild.timestamp=${{steps.set-version.outputs.timestamp}}
+          mvn package -DskipTests -Dbuild.tag.timestamp=${{steps.set-version.outputs.timestamp}}
       - name: Publish container image
         run: |
           docker tag ${{ env.IMAGE_NAME }}:${{ steps.set-version.outputs.timestamp }}  ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
