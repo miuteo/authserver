@@ -69,5 +69,6 @@ jobs:
       - name: Publish container image
         run: |
           docker tag ${{ env.IMAGE_NAME }}:${{ steps.set-version.outputs.timestamp }}  ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.set-version.outputs.timestamp }}  ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ steps.set-version.outputs.timestamp }}
           docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
           docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ steps.set-version.outputs.timestamp }}
