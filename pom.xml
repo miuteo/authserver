@@ -165,23 +165,23 @@
                 </configuration>
                 <executions>
                     <!-- Check formatting during verify -->
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <phase>verify</phase>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>verify</phase>-->
+<!--                    </execution>-->
 
                     <!-- Optionally, auto-format during install/package -->
                     <!-- Uncomment if you want auto-fix instead of just check -->
-                    <!--
+
                     <execution>
                       <goals>
                         <goal>apply</goal>
                       </goals>
                       <phase>process-sources</phase>
                     </execution>
-                    -->
+
                 </executions>
             </plugin>
             <plugin>
